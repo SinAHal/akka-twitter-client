@@ -35,10 +35,9 @@ object Client {
   }
 
   def main(args: Array[String]): Unit = {
-    // TODO: change so it reads from properties file
     val responseFuture: Future[HttpResponse] = obtainBearerToken(
-      "consumer key goes here",
-      "consumer secret goes here"
+      Properties.readString("consumer.key"),
+      Properties.readString("consumer.secret")
     )
 
     responseFuture
@@ -54,7 +53,7 @@ object Client {
                 // TODO: AKKA-HTTP intended for streaming, this is not streaming!
                 case Success(tweets) => tweets.toStrict(timeout).map{ t => println(t.entity) }
               }
-            }
+          }
         case Failure(_) => sys.error("Failed to obtain Bearer Token")
       }
   }
